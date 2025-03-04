@@ -40,6 +40,9 @@ jobs:
           git push --force origin tag ${{ env.TAG }}
           
           # upload
+          # Note: sending one by one fails due to upload limits,
+          # so instead I upload them one by one, which works but it's too slow
+          # consider uploading in batches
           for file in ics/*; do
             echo "Uploading $file"
             until gh release upload ${{ env.TAG }} "$file" --clobber; do
