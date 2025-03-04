@@ -40,7 +40,7 @@ jobs:
           git push --force origin tag ${{ env.TAG }}
           
           # upload
-          for file in *; do
+          for file in ics/*; do
             echo "Uploading $file"
             until gh release upload ${{ env.TAG }} $file --clobber; do
               echo "Error, let's wait..."
