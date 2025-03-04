@@ -19,7 +19,7 @@ env:
   TAG: ics
 
 jobs:
-  prepare:
+  generate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

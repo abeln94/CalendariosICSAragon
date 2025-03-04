@@ -1,4 +1,5 @@
 import datetime
+import os
 
 import requests
 from bs4 import BeautifulSoup
@@ -55,5 +56,7 @@ for location in set(event.location for event in other_events):
     clone.events = sorted(clone.events, key=lambda e: e.begin)
 
     # save as file
-    with open(f'ics/{location.replace("/", "_")}.ics', 'w', encoding='utf-8') as file:
+    file_name = f'ics/{location.replace("/", "_")}.ics'
+    os.makedirs(os.path.dirname(file_name), exist_ok=True)
+    with open(file_name, 'w', encoding='utf-8') as file:
         file.write(clone.serialize().replace("\r\n", "\n"))
