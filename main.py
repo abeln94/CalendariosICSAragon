@@ -6,21 +6,47 @@ from bs4 import BeautifulSoup
 
 from ics import Calendar
 
+FROM_YEAR = 2018  # first year with full ICS calendars
 
-def getCalendarFromHtml(html, label):
+
+def get_calendar_from_main_page(html, label):
     """Returns a calendar whose url is extracted from a previously fetched page, or None if not found"""
+    # find label
     marker = html.find(string=label)
-    if marker is None: return None
-    req = requests.get(marker.next_element.next_element.find("a").get("href"))
+    if marker is None:
+        print(f"Calendar with label '{label}' was not found")
+        return None
+
+    # search link
+    href = None
+    for sibling in marker.parent.next_siblings:
+        if sibling == '\n':
+            continue
+        if 'title' in sibling['class']:
+            # not found
+            print(f"Next title found before ICS link for calendar with label '{label}'")
+            return None
+        a = sibling.find("a")
+        if a == -1:
+            continue
+        ahref = a['href']
+        if ahref.endswith(".ics"):
+            href = ahref
+            break
+    if href is None:
+        print(f"ICS link was not found for calendar with label '{label}'")
+        return None
+
+    # download
+    print("->", href)
+    req = requests.get(href)
     req.encoding = 'UTF-8'  # fix for wrong server encoding
     return Calendar(req.text)
 
 
-current_year = datetime.date.today().year
-
 # fetch pages
 year_pages = []
-for year in [current_year - 1, current_year, current_year + 1]:
+for year in range(FROM_YEAR, datetime.date.today().year + 1 + 1):
     print("Requesting page for year", year)
     page = BeautifulSoup(requests.get(
         f"https://opendata.aragon.es/datos/catalogo/dataset/calendario-de-festivos-en-comunidad-de-aragon-{year}").text,
@@ -31,8 +57,11 @@ for year in [current_year - 1, current_year, current_year + 1]:
 base_calendar = Calendar()
 for year, page in year_pages:
     print("Requesting base calendar for year", year)
-    calendar = getCalendarFromHtml(page, f"Calendario de festivos en Comunidad de Aragón {year}")
-    if calendar is None: continue
+    calendar = get_calendar_from_main_page(page, f"Calendario de festivos en Comunidad de Aragón {year}")
+    if calendar is None:
+        print("Removed calendar for year", year)
+        year_pages.remove((year, page))
+        continue
     base_calendar.events.update(calendar.events)
 
 # generate other events
@@ -40,7 +69,7 @@ other_events = set()
 for year, page in year_pages:
     for location in ["Zaragoza", "Teruel", "Huesca"]:
         print("Requesting calendar for location", location, "and year", year)
-        calendar = getCalendarFromHtml(page, f"Calendario de festivos en provincia de {location} {year}")
+        calendar = get_calendar_from_main_page(page, f"Calendario de festivos en provincia de {location} {year}")
         if calendar is None: continue
         other_events.update(calendar.events)
 
