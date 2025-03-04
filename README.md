@@ -2,6 +2,8 @@
 
 **> https://github.com/abeln94/CalendariosICSAragon/releases/tag/ics <**
 
+_Nada de este repositorio (ni scripts ni calendarios) está afiliado con el Gobierno de Aragón. El contenido aquí mostrado está generado por mi a partir de información pública disponible._
+
 ### Descripción
 
 Este script descarga los calendarios oficiales de la página de Aragón opendata: https://opendata.aragon.es, tanto el
@@ -12,7 +14,7 @@ Por ejemplo: el calendario para zaragoza sólo contiene los eventos de aragón y
 zaragoza contiene todos los eventos de todos los pueblos de la provincia de zaragoza, aparte de estar dividido por año).
 
 Pensado para ser importado directamente en el calendario de Google (u otro servicio) a través de
-url: https://github.com/abeln94/CalendariosICSAragon/releases/download/ics/Zaragoza.ics ya que se actualizarán
+url: https://github.com/abeln94/CalendariosICSAragon/releases/download/ics/zaragoza.ics ya que se actualizarán
 automaticamente.
 
 Tambien se pueden descargar si se prefiere.
