@@ -24,7 +24,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Runs cript
+      - name: Run script
         run: |
           pip install -r requirements.txt
           python main.py
@@ -42,7 +42,7 @@ jobs:
           # upload
           for file in ics/*; do
             echo "Uploading $file"
-            until gh release upload ${{ env.TAG }} $file --clobber; do
+            until gh release upload ${{ env.TAG }} "$file" --clobber; do
               echo "Error, let's wait..."
               sleep 60
               echo "...and retry again"
