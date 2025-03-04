@@ -39,4 +39,7 @@ jobs:
           git push --force origin tag ${{ env.TAG }}
           
           # upload
-          gh release upload ${{ env.TAG }} ics/* --clobber
+          for file in *; do
+            echo "Uploading $file"
+            retry gh release upload ${{ env.TAG }} $file --clobber
+          done
