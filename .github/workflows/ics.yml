@@ -42,5 +42,9 @@ jobs:
           # upload
           for file in *; do
             echo "Uploading $file"
-            retry gh release upload ${{ env.TAG }} $file --clobber
+            until gh release upload ${{ env.TAG }} $file --clobber; do
+              echo "Error, let's wait..."
+              sleep 60
+              echo "...and retry again"
+            done
           done
