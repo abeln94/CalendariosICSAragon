@@ -1,0 +1,42 @@
+# Create ICS files
+name: Generate ICS files
+
+on:
+  # manual run
+  workflow_dispatch:
+
+
+# Cancel running actions if new commits are added
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+# parameters
+env:
+  TAG: ics
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Runs cript
+        run: |
+          pip install -r requirements.txt
+          python main.py
+
+      - name: Upload release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          
+          # update tag
+          git tag --force ${{ env.TAG }}
+          git push --force origin tag ${{ env.TAG }}
+          
+          # upload
+          gh release upload ${{ env.TAG }} ics/* --clobber
