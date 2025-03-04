@@ -1,0 +1,5 @@
+# ignore intellij
+.idea/
+
+# output
+ics/
