@@ -74,11 +74,12 @@ for year, page in year_pages:
         other_events.update(calendar.events)
 
 # generate calendars
-for location in set(event.location for event in other_events):
+# locations are normalized as lowercase, since github doesn't support two files with the same name
+for location in set(event.location.lower() for event in other_events):
     print("Generating calendar for location", location)
     clone = base_calendar.clone()
     for event in other_events:
-        if event.location == location:
+        if event.location.lower() == location.lower():
             clone.events.add(event)
 
     # sort events by date
