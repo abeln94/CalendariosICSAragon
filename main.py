@@ -78,9 +78,15 @@ for year, page in year_pages:
 for location in set(event.location.lower() for event in other_events):
     print("Generating calendar for location", location)
     clone = base_calendar.clone()
+    clone.events = set(e.clone() for e in clone.events)  # fix for clone not cloning events
     for event in other_events:
         if event.location.lower() == location.lower():
-            clone.events.add(event)
+            clone.events.add(event.clone())
+
+    # swap summary (name) and description of events
+    for event in clone.events:
+        if event.description and event.name:
+            event.description, event.name = event.name, event.description
 
     # sort events by date
     clone.events = sorted(clone.events, key=lambda e: e.begin)
