@@ -25,10 +25,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Prepare python environment
+        run: pip install -r requirements.txt
+
       - name: Run script
-        run: |
-          pip install -r requirements.txt
-          python main.py
+        run: python main.py
 
       - name: Upload release
         env:
