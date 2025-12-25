@@ -5,6 +5,10 @@ on:
   # manual run
   workflow_dispatch:
 
+  # cron
+  schedule:
+    - cron: "0 0 1 * *" # first day of each month
+
 
 # Cancel running actions if new commits are added
 concurrency:
