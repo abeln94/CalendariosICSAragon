@@ -59,8 +59,8 @@ for year, page in year_pages:
     print("Requesting base calendar for year", year)
     calendar = get_calendar_from_main_page(page, f"Calendario de festivos en Comunidad de Aragón {year}")
     if calendar is None:
-        print("Removed calendar for year", year)
-        year_pages.remove((year, page))
+        print("Missing base calendar for year", year)
+        #year_pages.remove((year, page)) # continue, even if most of the events are missing
         continue
     base_calendar.events.update(calendar.events)
 
