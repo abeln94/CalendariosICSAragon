@@ -5,14 +5,18 @@ git tag --force $TAG
 git push --force origin tag $TAG
 
 # upload
-# Note: sending one by one fails due to upload limits,
-# so instead I upload them one by one, which works but it's too slow
-# consider uploading in batches
-for file in ics/*; do
+upload () {
+  file=$*
+
   echo "Uploading $file"
-  until gh release upload $TAG "$file" --clobber; do
+  until gh release upload $TAG $file --clobber; do
     echo "Error, let's wait..."
     sleep 60
     echo "...and retry again"
   done
-done
+}
+export -f upload
+
+# Note: sending everything at one go fails due to upload limits, so instead I upload them in batches
+cd ics
+ls | xargs -L 50 bash -c 'upload $@' _
