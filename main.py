@@ -1,13 +1,10 @@
 import datetime
 import os
-import sys
 
 import requests
 from bs4 import BeautifulSoup
 
 from ics import Calendar
-
-sys.setrecursionlimit(1_000_000)
 
 FROM_YEAR = 2018  # first year with full ICS calendars
 
